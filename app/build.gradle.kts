@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.exemplo.meudiariodeemocoes"
+    namespace = "com.example.meudiariodeemocoes"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.exemplo.meudiariodeemocoes"
+        applicationId = "com.example.meudiariodeemocoes"
         minSdk = 23
         targetSdk = 34
         versionCode = 1

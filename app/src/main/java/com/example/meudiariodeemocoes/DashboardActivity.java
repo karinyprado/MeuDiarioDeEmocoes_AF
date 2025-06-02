@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DashboardActivity extends AppCompatActivity {
-public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
     private FirebaseFirestore db;
@@ -50,7 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         loadDashboardData();
-    }
+    } // Fim do método onCreate
 
     private void loadDashboardData() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -90,7 +89,6 @@ public class DashboardActivity extends AppCompatActivity {
                         } else {
                             binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
                             binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
-                            // binding.textViewMainReasonSummary.setVisibility(View.VISIBLE); // Descomente se for usar
                             processAndDisplayDashboard(moodEntries);
                         }
                     } else {
@@ -99,12 +97,12 @@ public class DashboardActivity extends AppCompatActivity {
                         binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
                     }
                 });
-    }
+    } // Fim do método loadDashboardData
 
     private void processAndDisplayDashboard(List<MoodEntry> entries) {
         Map<String, Integer> moodCounts = new HashMap<>();
         for (MoodEntry entry : entries) {
-            if (entry.getMoodLabel() != null) { // Adiciona verificação de nulidade
+            if (entry.getMoodLabel() != null) {
                 moodCounts.put(entry.getMoodLabel(), moodCounts.getOrDefault(entry.getMoodLabel(), 0) + 1);
             }
         }
@@ -112,10 +110,9 @@ public class DashboardActivity extends AppCompatActivity {
         if (!moodCounts.isEmpty()) {
             setupPieChart(moodCounts);
         } else {
-            binding.pieChartMoodDistribution.clear(); // Limpa o gráfico se não houver dados
+            binding.pieChartMoodDistribution.clear();
             binding.pieChartMoodDistribution.setVisibility(View.GONE);
         }
-
 
         String mostFrequentMood = "";
         int maxCount = 0;
@@ -130,9 +127,9 @@ public class DashboardActivity extends AppCompatActivity {
             binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
         } else {
             binding.textViewMostFrequentMood.setText(getString(R.string.no_data_for_dashboard));
-            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE); // Mostra a mensagem de "sem dados"
+            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
         }
-    }
+    } // Fim do método processAndDisplayDashboard
 
     private void setupPieChart(Map<String, Integer> moodCounts) {
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -151,7 +148,6 @@ public class DashboardActivity extends AppCompatActivity {
         data.setValueTextSize(12f);
         data.setValueTextColor(Color.BLACK);
 
-
         binding.pieChartMoodDistribution.setData(data);
         binding.pieChartMoodDistribution.getDescription().setEnabled(false);
         binding.pieChartMoodDistribution.setUsePercentValues(true);
@@ -165,7 +161,7 @@ public class DashboardActivity extends AppCompatActivity {
         binding.pieChartMoodDistribution.animateY(1400, Easing.EaseInOutQuad);
         binding.pieChartMoodDistribution.invalidate();
         binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
-    }
+    } // Fim do método setupPieChart
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -174,5 +170,6 @@ public class DashboardActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-}
+    } // Fim do método onOptionsItemSelected
+
+} // Fim da classe DashboardActivity
