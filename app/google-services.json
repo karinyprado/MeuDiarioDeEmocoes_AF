@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "914141069769",
+    "project_id": "meu-diario-de-emocoes",
+    "storage_bucket": "meu-diario-de-emocoes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:914141069769:android:7dda6cadb0184569bce818",
+        "android_client_info": {
+          "package_name": "com.example.meudiariodeemocoes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZF3DLHkwxCYRfSyQTtNIOt9FmiJCTVNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

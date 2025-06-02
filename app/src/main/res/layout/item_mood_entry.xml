@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="4dp"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/image_view_mood_emoji_item"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/emoji_feliz"
+            android:contentDescription="@string/mood_label_happy" /> <TextView
+        android:id="@+id/text_view_mood_label_item"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintStart_toEndOf="@id/image_view_mood_emoji_item"
+        app:layout_constraintTop_toTopOf="@id/image_view_mood_emoji_item"
+        app:layout_constraintEnd_toStartOf="@id/image_view_delete_item"
+        tools:text="Feliz" />
+
+        <TextView
+            android:id="@+id/text_view_mood_date_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+            app:layout_constraintStart_toEndOf="@id/image_view_mood_emoji_item"
+            app:layout_constraintTop_toBottomOf="@id/text_view_mood_label_item"
+            app:layout_constraintEnd_toStartOf="@id/image_view_delete_item"
+            tools:text="01 de Janeiro de 2024, 10:00" />
+
+        <TextView
+            android:id="@+id/text_view_mood_reasons_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="?android:attr/textColorSecondary"
+            app:layout_constraintStart_toStartOf="@id/text_view_mood_label_item"
+            app:layout_constraintTop_toBottomOf="@id/text_view_mood_date_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Motivos: Trabalho, Família" />
+
+        <TextView
+            android:id="@+id/text_view_mood_description_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintStart_toStartOf="@id/text_view_mood_label_item"
+            app:layout_constraintTop_toBottomOf="@id/text_view_mood_reasons_item"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Descrição detalhada do humor do dia." />
+
+        <ImageButton
+            android:id="@+id/image_view_delete_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/dialog_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorControlNormal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

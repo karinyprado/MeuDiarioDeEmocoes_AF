@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">Meu Diário de Emoções</string>
+
+    <string name="title_activity_main">Meu Histórico</string>
+    <string name="no_mood_entries">Nenhum humor registrado ainda. Clique no + para adicionar!</string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="delete_entry_dialog_title">Excluir Registro?</string>
+    <string name="delete_entry_dialog_message">Tem certeza que deseja excluir este registro de humor?</string>
+    <string name="delete_entry_success">Registro excluído.</string>
+    <string name="delete_entry_error">Erro ao excluir registro.</string>
+    <string name="dialog_delete">Excluir</string>
+    <string name="dialog_cancel">Cancelar</string>
+
+    <string name="title_activity_add_mood">Registrar Humor</string>
+    <string name="how_are_you_feeling">Como você está se sentindo hoje?</string>
+    <string name="what_influenced_your_mood">O que influenciou seu humor?</string>
+    <string name="describe_optional">Descreva um pouco mais (opcional)</string>
+    <string name="save_mood">Salvar Humor</string>
+    <string name="mood_saved_success">Humor salvo com sucesso!</string>
+    <string name="error_saving_mood">Erro ao salvar humor: %1$s</string>
+    <string name="please_select_mood">Por favor, selecione um humor.</string>
+
+    <string name="mood_label_happy">Feliz</string>
+    <string name="mood_label_sad">Triste</string>
+    <string name="mood_label_neutral">Neutro</string>
+    <string name="mood_label_anxious">Ansioso</string>
+    <string name="mood_label_angry">Irritado</string>
+    <string name="reason_label_family">Família</string>
+    <string name="reason_label_work">Trabalho</string>
+    <string name="reason_label_friends">Amigos</string>
+    <string name="reason_label_personal_life">Vida Pessoal</string>
+    <string name="reason_label_money">Dinheiro</string>
+    <string name="reason_label_health">Saúde</string>
+    <string name="reason_label_studies">Estudos</string>
+    <string name="reason_label_other">Outro</string>
+
+    <string name="title_activity_dashboard">Dashboard de Emoções</string>
+    <string name="mood_distribution_last_30_days">Distribuição de Humores (Últimos 30 dias)</string>
+    <string name="most_frequent_mood_is">Seu humor mais frequente foi: %1$s</string>
+    <string name="main_reason_for_mood_was">O principal motivo para %1$s foi: %2$s</string>
+    <string name="no_data_for_dashboard">Dados insuficientes para o dashboard.</string>
+    <string name="loading_data">Carregando dados...</string>
+
+    <string name="cd_emoji_happy">Emoji Feliz</string>
+    <string name="cd_emoji_sad">Emoji Triste</string>
+    <string name="cd_emoji_neutral">Emoji Neutro</string>
+    <string name="cd_emoji_anxious">Emoji Ansioso</string>
+    <string name="cd_emoji_angry">Emoji Irritado</string>
+</resources>

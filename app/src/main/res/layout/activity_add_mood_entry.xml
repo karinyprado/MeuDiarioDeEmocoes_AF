@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.meudiariodeemocoes.AddMoodEntryActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.MeuDiarioDeEmocoes.AppBarOverlay">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_add_mood_entry"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/Theme.MeuDiarioDeEmocoes.PopupOverlay" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/how_are_you_feeling"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/linear_layout_emojis"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp">
+
+                <ImageButton
+                    android:id="@+id/emoji_happy"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/emoji_feliz"
+                    android:contentDescription="@string/cd_emoji_happy"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageButton
+                    android:id="@+id/emoji_sad"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/emoji_triste"
+                    android:contentDescription="@string/cd_emoji_sad"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageButton
+                    android:id="@+id/emoji_neutral"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/emoji_neutro"
+                    android:contentDescription="@string/cd_emoji_neutral"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageButton
+                    android:id="@+id/emoji_anxious"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/emoji_ansioso"
+                    android:contentDescription="@string/cd_emoji_anxious"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageButton
+                    android:id="@+id/emoji_angry"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/emoji_bravo"
+                    android:contentDescription="@string/cd_emoji_angry"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/what_influenced_your_mood"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group_reasons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacingHorizontal="8dp"
+            app:singleLine="false">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_family" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_family"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_work" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_work"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_friends" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_friends"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_personal_life" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_personal_life"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_money" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_money"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_health" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_health"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_studies" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_studies"/>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_other" style="@style/Widget.MaterialComponents.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/reason_label_other"/>
+        </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/describe_optional"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="16dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:gravity="top"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/button_save_mood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/save_mood"
+            android:layout_marginTop="24dp"/>
+    </LinearLayout>
+</ScrollView>
