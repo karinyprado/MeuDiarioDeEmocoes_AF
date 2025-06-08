@@ -23,22 +23,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/emoji_feliz"
-            android:contentDescription="@string/mood_label_happy" /> <TextView
-        android:id="@+id/text_view_mood_label_item"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintStart_toEndOf="@id/image_view_mood_emoji_item"
-        app:layout_constraintTop_toTopOf="@id/image_view_mood_emoji_item"
-        app:layout_constraintEnd_toStartOf="@id/image_view_delete_item"
-        tools:text="Feliz" />
+            android:contentDescription="@string/mood_label_happy" />
+
+        <ImageButton
+            android:id="@+id/image_view_delete_item"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/dialog_delete"
+            android:padding="8dp"
+            android:src="@drawable/ic_delete"
+            android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_mood_label_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintStart_toEndOf="@id/image_view_mood_emoji_item"
+            app:layout_constraintTop_toTopOf="@id/image_view_mood_emoji_item"
+            app:layout_constraintEnd_toStartOf="@id/image_view_delete_item"
+            tools:text="Feliz" />
 
         <TextView
             android:id="@+id/text_view_mood_date_item"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
             app:layout_constraintStart_toEndOf="@id/image_view_mood_emoji_item"
             app:layout_constraintTop_toBottomOf="@id/text_view_mood_label_item"
@@ -64,23 +80,12 @@
             android:layout_marginTop="4dp"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
             android:visibility="gone"
-            tools:visibility="visible"
-            app:layout_constraintStart_toStartOf="@id/text_view_mood_label_item"
+            app:layout_constraintStart_toStartOf="@id/text_view_mood_reasons_item"
             app:layout_constraintTop_toBottomOf="@id/text_view_mood_reasons_item"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="Descrição detalhada do humor do dia." />
-
-        <ImageButton
-            android:id="@+id/image_view_delete_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/dialog_delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorControlNormal" />
+            tools:text="Descrição detalhada do humor do dia."
+            tools:visibility="visible"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

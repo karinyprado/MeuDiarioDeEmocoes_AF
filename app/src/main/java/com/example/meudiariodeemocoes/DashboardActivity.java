@@ -7,17 +7,13 @@ import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.meudiariodeemocoes.R;
 import com.example.meudiariodeemocoes.databinding.ActivityDashboardBinding;
-import com.example.meudiariodeemocoes.model.MoodEntry;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,7 +27,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     private ActivityDashboardBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,21 +41,11 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         loadDashboardData();
-    } // Fim do método onCreate
+    }
 
     private void loadDashboardData() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(this, "Usuário não autenticado.", Toast.LENGTH_LONG).show();
-            binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
-            binding.progressBarDashboard.setVisibility(View.GONE);
-            return;
-        }
-        String userId = currentUser.getUid();
-
         binding.progressBarDashboard.setVisibility(View.VISIBLE);
         binding.textViewNoDashboardData.setVisibility(View.GONE);
         binding.pieChartMoodDistribution.setVisibility(View.GONE);
@@ -72,8 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
         long thirtyDaysAgoTimestamp = calendar.getTimeInMillis();
 
         db.collection("mood_entries")
-                .whereEqualTo("userId", userId)
-                .whereGreaterThanOrEqualTo("timestamp", thirtyDaysAgoTimestamp)
+                .whereGreaterThanOrEqualTo("timestamp", thirtyDaysAgoTimestamp) // Não filtra mais por usuário
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -97,7 +81,7 @@ public class DashboardActivity extends AppCompatActivity {
                         binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
                     }
                 });
-    } // Fim do método loadDashboardData
+    }
 
     private void processAndDisplayDashboard(List<MoodEntry> entries) {
         Map<String, Integer> moodCounts = new HashMap<>();
@@ -129,7 +113,7 @@ public class DashboardActivity extends AppCompatActivity {
             binding.textViewMostFrequentMood.setText(getString(R.string.no_data_for_dashboard));
             binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
         }
-    } // Fim do método processAndDisplayDashboard
+    }
 
     private void setupPieChart(Map<String, Integer> moodCounts) {
         List<PieEntry> pieEntries = new ArrayList<>();
@@ -161,7 +145,7 @@ public class DashboardActivity extends AppCompatActivity {
         binding.pieChartMoodDistribution.animateY(1400, Easing.EaseInOutQuad);
         binding.pieChartMoodDistribution.invalidate();
         binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
-    } // Fim do método setupPieChart
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -170,6 +154,5 @@ public class DashboardActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    } // Fim do método onOptionsItemSelected
-
-} // Fim da classe DashboardActivity
+    }
+}

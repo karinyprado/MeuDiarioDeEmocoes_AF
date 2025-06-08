@@ -1,4 +1,4 @@
-package com.example.meudiariodeemocoes;
+package com.example.meudiariodeemocoes; // ATUALIZADO
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.example.meudiariodeemocoes.R;
+// import com.example.meudiariodeemocoes.R; // R
 import com.example.meudiariodeemocoes.databinding.ItemMoodEntryBinding;
-import com.example.meudiariodeemocoes.model.MoodEntry;
+import com.example.meudiariodeemocoes.MoodEntry; // ATUALIZADO import
 import java.text.SimpleDateFormat;
-import java.util.ArrayList; // Importe ArrayList
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +29,6 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
 
     public MoodEntryAdapter(Context context, List<MoodEntry> moodEntries, OnItemClickListener listener) {
         this.context = context;
-        // Inicialize a lista para evitar NullPointerException se a lista de entrada for nula
         this.moodEntries = moodEntries != null ? moodEntries : new ArrayList<>();
         this.listener = listener;
     }
@@ -54,7 +53,7 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
 
     public void updateEntries(List<MoodEntry> newEntries) {
         this.moodEntries.clear();
-        if (newEntries != null) { // Adicione verificação de nulo
+        if (newEntries != null) {
             this.moodEntries.addAll(newEntries);
         }
         notifyDataSetChanged();
@@ -78,7 +77,7 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
         void bind(MoodEntry entry) {
             binding.textViewMoodLabelItem.setText(entry.getMoodLabel());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("dd 'de' MMMM 'de'<y_bin_925>, HH:mm", new Locale("pt", "BR"));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy, HH:mm", new Locale("pt", "BR"));
             binding.textViewMoodDateItem.setText(sdf.format(new Date(entry.getTimestamp())));
 
             if (!TextUtils.isEmpty(entry.getMoodEmojiName())) {
@@ -96,7 +95,6 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
                 binding.imageViewMoodEmojiItem.setImageResource(R.mipmap.ic_launcher);
             }
             binding.imageViewMoodEmojiItem.setContentDescription(entry.getMoodLabel());
-
 
             if (entry.getReasons() != null && !entry.getReasons().isEmpty()) {
                 binding.textViewMoodReasonsItem.setText("Motivos: " + TextUtils.join(", ", entry.getReasons()));

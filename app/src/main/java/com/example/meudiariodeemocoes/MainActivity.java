@@ -1,178 +1,150 @@
 package com.example.meudiariodeemocoes;
 
-import android.graphics.Color;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.meudiariodeemocoes.R;
-import com.example.meudiariodeemocoes.databinding.ActivityDashboardBinding;
-import com.example.mplo.meudiariodeemocoes.model.MoodEntry;
-import com.github.mikephil.charting.animation.Easing;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import com.example.meudiariodeemocoes.databinding.ActivityMainBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class DashboardActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.OnItemClickListener {
 
-    private ActivityDashboardBinding binding;
+    private static final String TAG = "DiaryApp";
+    private ActivityMainBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    private MoodEntryAdapter adapter;
+    private List<MoodEntry> moodEntryList;
+    private ListenerRegistration firestoreListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityDashboardBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbarDashboard);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.title_activity_dashboard));
-        }
+        setSupportActionBar(binding.toolbarMain);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
-        loadDashboardData();
+        // A lista é criada aqui e passada para o adapter.
+        // Ambos (Activity e Adapter) terão a mesma referência.
+        moodEntryList = new ArrayList<>();
+        adapter = new MoodEntryAdapter(this, moodEntryList, this);
+
+        binding.recyclerViewMoodHistory.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewMoodHistory.setAdapter(adapter);
+
+        binding.fabAddMood.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, AddMoodEntryActivity.class));
+        });
     }
 
-    private void loadDashboardData() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(this, "Usuário não autenticado.", Toast.LENGTH_LONG).show();
-            binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
-            binding.progressBarDashboard.setVisibility(View.GONE);
-            return;
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setupFirestoreListener();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (firestoreListener != null) {
+            firestoreListener.remove();
         }
-        String userId = currentUser.getUid();
+    }
 
-        binding.progressBarDashboard.setVisibility(View.VISIBLE);
-        binding.textViewNoDashboardData.setVisibility(View.GONE);
-        binding.pieChartMoodDistribution.setVisibility(View.GONE);
-        binding.textViewMostFrequentMood.setVisibility(View.GONE);
-        binding.textViewMainReasonSummary.setVisibility(View.GONE);
+    private void setupFirestoreListener() {
+        Log.d(TAG, "Configurando o listener do Firestore...");
+        binding.progressBarMain.setVisibility(View.VISIBLE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, -30);
-        long thirtyDaysAgoTimestamp = calendar.getTimeInMillis();
-
-        db.collection("mood_entries")
-                .whereEqualTo("userId", userId)
-                .whereGreaterThanOrEqualTo("timestamp", thirtyDaysAgoTimestamp)
+        firestoreListener = db.collection("mood_entries")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(task -> {
-                    binding.progressBarDashboard.setVisibility(View.GONE);
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        List<MoodEntry> moodEntries = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            moodEntries.add(document.toObject(MoodEntry.class));
+                .addSnapshotListener((snapshots, e) -> {
+                    binding.progressBarMain.setVisibility(View.GONE);
+
+                    if (e != null) {
+                        Log.e(TAG, "Erro ao ouvir o Firestore.", e);
+                        return;
+                    }
+
+                    if (snapshots != null) {
+                        Log.d(TAG, "Snapshot recebido com " + snapshots.size() + " documentos.");
+
+                        // Limpamos e preenchemos a lista que o adapter JÁ CONHECE.
+                        moodEntryList.clear();
+                        for (QueryDocumentSnapshot doc : snapshots) {
+                            MoodEntry entry = doc.toObject(MoodEntry.class);
+                            entry.setEntryId(doc.getId());
+                            moodEntryList.add(entry);
                         }
 
-                        if (moodEntries.isEmpty()) {
-                            binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
+                        // *** A CORREÇÃO PRINCIPAL ESTÁ AQUI ***
+                        // Apenas notificamos o adapter que os dados na lista dele mudaram.
+                        Log.d(TAG, "Notificando o adapter que os dados mudaram. Novo tamanho: " + moodEntryList.size());
+                        adapter.notifyDataSetChanged();
+
+                        // A lógica de visibilidade continua a mesma
+                        if (moodEntryList.isEmpty()) {
+                            binding.textViewNoEntries.setVisibility(View.VISIBLE);
+                            binding.recyclerViewMoodHistory.setVisibility(View.GONE);
                         } else {
-                            binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
-                            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
-                            // binding.textViewMainReasonSummary.setVisibility(View.VISIBLE); // Descomente se for usar
-                            processAndDisplayDashboard(moodEntries);
+                            binding.textViewNoEntries.setVisibility(View.GONE);
+                            binding.recyclerViewMoodHistory.setVisibility(View.VISIBLE);
                         }
-                    } else {
-                        String errorMessage = task.getException() != null ? task.getException().getMessage() : "Erro desconhecido";
-                        Toast.makeText(DashboardActivity.this, "Erro ao carregar dados do dashboard: " + errorMessage, Toast.LENGTH_SHORT).show();
-                        binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
                     }
                 });
     }
 
-    private void processAndDisplayDashboard(List<MoodEntry> entries) {
-        Map<String, Integer> moodCounts = new HashMap<>();
-        for (MoodEntry entry : entries) {
-            if (entry.getMoodLabel() != null) { // Adiciona verificação de nulidade
-                moodCounts.put(entry.getMoodLabel(), moodCounts.getOrDefault(entry.getMoodLabel(), 0) + 1);
-            }
-        }
-
-        if (!moodCounts.isEmpty()) {
-            setupPieChart(moodCounts);
-        } else {
-            binding.pieChartMoodDistribution.clear(); // Limpa o gráfico se não houver dados
-            binding.pieChartMoodDistribution.setVisibility(View.GONE);
-        }
-
-
-        String mostFrequentMood = "";
-        int maxCount = 0;
-        for (Map.Entry<String, Integer> moodCount : moodCounts.entrySet()) {
-            if (moodCount.getValue() > maxCount) {
-                maxCount = moodCount.getValue();
-                mostFrequentMood = moodCount.getKey();
-            }
-        }
-        if (!mostFrequentMood.isEmpty()) {
-            binding.textViewMostFrequentMood.setText(getString(R.string.most_frequent_mood_is, mostFrequentMood));
-            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
-        } else {
-            binding.textViewMostFrequentMood.setText(getString(R.string.no_data_for_dashboard));
-            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE); // Mostra a mensagem de "sem dados"
-        }
-    }
-
-    private void setupPieChart(Map<String, Integer> moodCounts) {
-        List<PieEntry> pieEntries = new ArrayList<>();
-        for (Map.Entry<String, Integer> moodCount : moodCounts.entrySet()) {
-            pieEntries.add(new PieEntry(moodCount.getValue(), moodCount.getKey()));
-        }
-
-        PieDataSet dataSet = new PieDataSet(pieEntries, "");
-        dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-        dataSet.setValueTextColor(Color.BLACK);
-        dataSet.setValueTextSize(12f);
-        dataSet.setSliceSpace(2f);
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter(binding.pieChartMoodDistribution));
-        data.setValueTextSize(12f);
-        data.setValueTextColor(Color.BLACK);
-
-
-        binding.pieChartMoodDistribution.setData(data);
-        binding.pieChartMoodDistribution.getDescription().setEnabled(false);
-        binding.pieChartMoodDistribution.setUsePercentValues(true);
-        binding.pieChartMoodDistribution.setEntryLabelTextSize(10f);
-        binding.pieChartMoodDistribution.setEntryLabelColor(Color.BLACK);
-        binding.pieChartMoodDistribution.setCenterText("Humores");
-        binding.pieChartMoodDistribution.setCenterTextSize(16f);
-        binding.pieChartMoodDistribution.setDrawEntryLabels(true);
-        binding.pieChartMoodDistribution.setRotationEnabled(true);
-        binding.pieChartMoodDistribution.setHighlightPerTapEnabled(true);
-        binding.pieChartMoodDistribution.animateY(1400, Easing.EaseInOutQuad);
-        binding.pieChartMoodDistribution.invalidate();
-        binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
+        if (item.getItemId() == R.id.action_dashboard) {
+            startActivity(new Intent(MainActivity.this, DashboardActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
-    } // Fim do método onOptionsItemSelected
+    }
 
-} // Fim da classe DashboardActivity (ESTA É A CHAVE QUE PODE ESTAR FALTANDO)
+    @Override
+    public void onItemDeleteClick(MoodEntry moodEntry) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_entry_dialog_title)
+                .setMessage(R.string.delete_entry_dialog_message)
+                .setPositiveButton(R.string.dialog_delete, (dialog, which) -> deleteEntryFromFirestore(moodEntry))
+                .setNegativeButton(R.string.dialog_cancel, null)
+                .setIconAttribute(android.R.attr.alertDialogIcon)
+                .show();
+    }
+
+    private void deleteEntryFromFirestore(MoodEntry moodEntry) {
+        if (moodEntry.getEntryId() == null || moodEntry.getEntryId().isEmpty()) {
+            Toast.makeText(this, "ID do registro inválido.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        db.collection("mood_entries").document(moodEntry.getEntryId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(MainActivity.this, R.string.delete_entry_success, Toast.LENGTH_SHORT).show();
+                    // Não precisamos fazer nada aqui, o listener do Firestore cuidará da atualização da lista.
+                })
+                .addOnFailureListener(e -> Toast.makeText(MainActivity.this, getString(R.string.delete_entry_error) + ": " + e.getMessage(), Toast.LENGTH_LONG).show());
+    }
+}

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="md_theme_primary">#6750A4</color>
+    <color name="md_theme_primary">#4266AD</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_primaryContainer">#EADDFF</color>
-    <color name="md_theme_onPrimaryContainer">#21005D</color>
+    <color name="md_theme_primaryContainer">#B6BEFF</color>
+    <color name="md_theme_onPrimaryContainer">#185273</color>
     <color name="md_theme_secondary">#625B71</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
     <color name="md_theme_secondaryContainer">#E8DEF8</color>
@@ -26,7 +26,7 @@
     <color name="md_theme_shadow">#000000</color>
     <color name="md_theme_inverseSurface">#313033</color>
     <color name="md_theme_inverseOnSurface">#F4EFF4</color>
-    <color name="md_theme_inversePrimary">#D0BCFF</color>
+    <color name="md_theme_inversePrimary">#B6BEFF</color>
 
     <color name="emoji_selected_background">#D1C4E9</color> <color name="emoji_default_background">@android:color/transparent</color>
     <color name="grey_text">#757575</color>

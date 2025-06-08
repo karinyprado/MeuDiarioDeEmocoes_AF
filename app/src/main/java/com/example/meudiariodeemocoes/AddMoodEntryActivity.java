@@ -8,12 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import com.example.meudiariodeemocoes.R;
 import com.example.meudiariodeemocoes.databinding.ActivityAddMoodEntryBinding;
-import com.example.meudiariodeemocoes.model.MoodEntry;
 import com.google.android.material.chip.Chip;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,10 +17,8 @@ import java.util.List;
 
 public class AddMoodEntryActivity extends AppCompatActivity {
 
-    private ActivityAddMoodEntryBinding binding; // Usando ViewBinding
+    private ActivityAddMoodEntryBinding binding;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-
     private List<ImageButton> emojiButtons;
     private String selectedMoodEmojiName = "";
     private String selectedMoodLabel = "";
@@ -35,14 +29,13 @@ public class AddMoodEntryActivity extends AppCompatActivity {
         binding = ActivityAddMoodEntryBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbarAddMoodEntry); // Usando ViewBinding para acessar a Toolbar
+        setSupportActionBar(binding.toolbarAddMoodEntry);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.title_activity_add_mood));
         }
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         setupEmojiListeners();
         binding.buttonSaveMood.setOnClickListener(v -> saveMoodEntry());
@@ -54,11 +47,15 @@ public class AddMoodEntryActivity extends AppCompatActivity {
                 binding.emojiAnxious, binding.emojiAngry
         ));
 
-        binding.emojiHappy.setOnClickListener(v -> selectEmoji(binding.emojiHappy, "ic_emoji_happy", getString(R.string.mood_label_happy)));
-        binding.emojiSad.setOnClickListener(v -> selectEmoji(binding.emojiSad, "ic_emoji_sad", getString(R.string.mood_label_sad)));
-        binding.emojiNeutral.setOnClickListener(v -> selectEmoji(binding.emojiNeutral, "ic_emoji_neutral", getString(R.string.mood_label_neutral)));
-        binding.emojiAnxious.setOnClickListener(v -> selectEmoji(binding.emojiAnxious, "ic_emoji_anxious", getString(R.string.mood_label_anxious)));
-        binding.emojiAngry.setOnClickListener(v -> selectEmoji(binding.emojiAngry, "ic_emoji_angry", getString(R.string.mood_label_angry)));
+        // *** CORREÇÃO AQUI: Usando os nomes exatos dos seus arquivos .png ***
+        // (sem a extensão .png)
+        binding.emojiHappy.setOnClickListener(v -> selectEmoji(binding.emojiHappy, "emoji_feliz", getString(R.string.mood_label_happy)));
+        binding.emojiSad.setOnClickListener(v -> selectEmoji(binding.emojiSad, "emoji_triste", getString(R.string.mood_label_sad)));
+        binding.emojiNeutral.setOnClickListener(v -> selectEmoji(binding.emojiNeutral, "emoji_neutro", getString(R.string.mood_label_neutral)));
+        binding.emojiAnxious.setOnClickListener(v -> selectEmoji(binding.emojiAnxious, "emoji_ansioso", getString(R.string.mood_label_anxious)));
+
+        // Assumindo que seu arquivo para "Irritado" se chama "emoji_bravo.png"
+        binding.emojiAngry.setOnClickListener(v -> selectEmoji(binding.emojiAngry, "emoji_bravo", getString(R.string.mood_label_angry)));
     }
 
     private void selectEmoji(ImageButton selectedButton, String emojiName, String moodLabel) {
@@ -78,15 +75,7 @@ public class AddMoodEntryActivity extends AppCompatActivity {
             return;
         }
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(this, "Usuário não autenticado. Tente reiniciar o app.", Toast.LENGTH_LONG).show();
-            return;
-        }
-        String userId = currentUser.getUid();
-
         List<String> selectedReasons = new ArrayList<>();
-        // Iterar sobre os Chips no ChipGroup
         if (binding.chipFamily.isChecked()) selectedReasons.add(binding.chipFamily.getText().toString());
         if (binding.chipWork.isChecked()) selectedReasons.add(binding.chipWork.getText().toString());
         if (binding.chipFriends.isChecked()) selectedReasons.add(binding.chipFriends.getText().toString());
@@ -96,11 +85,10 @@ public class AddMoodEntryActivity extends AppCompatActivity {
         if (binding.chipStudies.isChecked()) selectedReasons.add(binding.chipStudies.getText().toString());
         if (binding.chipOther.isChecked()) selectedReasons.add(binding.chipOther.getText().toString());
 
-
         String description = binding.editTextDescription.getText().toString().trim();
         long timestamp = System.currentTimeMillis();
 
-        MoodEntry newEntry = new MoodEntry(userId, timestamp, selectedMoodEmojiName, selectedMoodLabel, selectedReasons, description);
+        MoodEntry newEntry = new MoodEntry(null, timestamp, selectedMoodEmojiName, selectedMoodLabel, selectedReasons, description);
 
         binding.buttonSaveMood.setEnabled(false);
 

@@ -46,7 +46,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
     implementation("com.google.firebase:firebase-analytics") // Adicionado conforme instrução
     implementation("com.google.firebase:firebase-firestore") // Mantido para o Firestore
-    implementation("com.google.firebase:firebase-auth")      // Mantido para Autenticação
 
     // MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
