@@ -1,4 +1,4 @@
-package com.example.meudiariodeemocoes; // CORRIGIDO
+package com.example.meudiariodeemocoes;
 
 import com.google.firebase.firestore.Exclude;
 import java.util.List;

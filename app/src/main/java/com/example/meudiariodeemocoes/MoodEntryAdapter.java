@@ -1,4 +1,4 @@
-package com.example.meudiariodeemocoes; // ATUALIZADO
+package com.example.meudiariodeemocoes;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -8,9 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-// import com.example.meudiariodeemocoes.R; // R
 import com.example.meudiariodeemocoes.databinding.ItemMoodEntryBinding;
-import com.example.meudiariodeemocoes.MoodEntry; // ATUALIZADO import
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;

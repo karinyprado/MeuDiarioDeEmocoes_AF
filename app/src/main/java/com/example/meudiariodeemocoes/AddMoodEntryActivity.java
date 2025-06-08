@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.example.meudiariodeemocoes.databinding.ActivityAddMoodEntryBinding;
-import com.google.android.material.chip.Chip;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,14 +46,10 @@ public class AddMoodEntryActivity extends AppCompatActivity {
                 binding.emojiAnxious, binding.emojiAngry
         ));
 
-        // *** CORREÇÃO AQUI: Usando os nomes exatos dos seus arquivos .png ***
-        // (sem a extensão .png)
         binding.emojiHappy.setOnClickListener(v -> selectEmoji(binding.emojiHappy, "emoji_feliz", getString(R.string.mood_label_happy)));
         binding.emojiSad.setOnClickListener(v -> selectEmoji(binding.emojiSad, "emoji_triste", getString(R.string.mood_label_sad)));
         binding.emojiNeutral.setOnClickListener(v -> selectEmoji(binding.emojiNeutral, "emoji_neutro", getString(R.string.mood_label_neutral)));
         binding.emojiAnxious.setOnClickListener(v -> selectEmoji(binding.emojiAnxious, "emoji_ansioso", getString(R.string.mood_label_anxious)));
-
-        // Assumindo que seu arquivo para "Irritado" se chama "emoji_bravo.png"
         binding.emojiAngry.setOnClickListener(v -> selectEmoji(binding.emojiAngry, "emoji_bravo", getString(R.string.mood_label_angry)));
     }
 

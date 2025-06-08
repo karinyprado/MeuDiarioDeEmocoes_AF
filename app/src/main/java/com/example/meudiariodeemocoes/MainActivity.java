@@ -39,14 +39,10 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
 
         db = FirebaseFirestore.getInstance();
 
-        // A lista é criada aqui e passada para o adapter.
-        // Ambos (Activity e Adapter) terão a mesma referência.
         moodEntryList = new ArrayList<>();
         adapter = new MoodEntryAdapter(this, moodEntryList, this);
-
         binding.recyclerViewMoodHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewMoodHistory.setAdapter(adapter);
-
         binding.fabAddMood.setOnClickListener(v -> {
             startActivity(new Intent(MainActivity.this, AddMoodEntryActivity.class));
         });
@@ -69,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
     private void setupFirestoreListener() {
         Log.d(TAG, "Configurando o listener do Firestore...");
         binding.progressBarMain.setVisibility(View.VISIBLE);
-
         firestoreListener = db.collection("mood_entries")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((snapshots, e) -> {
@@ -82,8 +77,6 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
 
                     if (snapshots != null) {
                         Log.d(TAG, "Snapshot recebido com " + snapshots.size() + " documentos.");
-
-                        // Limpamos e preenchemos a lista que o adapter JÁ CONHECE.
                         moodEntryList.clear();
                         for (QueryDocumentSnapshot doc : snapshots) {
                             MoodEntry entry = doc.toObject(MoodEntry.class);
@@ -91,12 +84,9 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
                             moodEntryList.add(entry);
                         }
 
-                        // *** A CORREÇÃO PRINCIPAL ESTÁ AQUI ***
-                        // Apenas notificamos o adapter que os dados na lista dele mudaram.
                         Log.d(TAG, "Notificando o adapter que os dados mudaram. Novo tamanho: " + moodEntryList.size());
                         adapter.notifyDataSetChanged();
 
-                        // A lógica de visibilidade continua a mesma
                         if (moodEntryList.isEmpty()) {
                             binding.textViewNoEntries.setVisibility(View.VISIBLE);
                             binding.recyclerViewMoodHistory.setVisibility(View.GONE);
@@ -143,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
                 .delete()
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(MainActivity.this, R.string.delete_entry_success, Toast.LENGTH_SHORT).show();
-                    // Não precisamos fazer nada aqui, o listener do Firestore cuidará da atualização da lista.
                 })
                 .addOnFailureListener(e -> Toast.makeText(MainActivity.this, getString(R.string.delete_entry_error) + ": " + e.getMessage(), Toast.LENGTH_LONG).show());
     }

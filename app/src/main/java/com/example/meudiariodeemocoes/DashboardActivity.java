@@ -57,7 +57,7 @@ public class DashboardActivity extends AppCompatActivity {
         long thirtyDaysAgoTimestamp = calendar.getTimeInMillis();
 
         db.collection("mood_entries")
-                .whereGreaterThanOrEqualTo("timestamp", thirtyDaysAgoTimestamp) // Não filtra mais por usuário
+                .whereGreaterThanOrEqualTo("timestamp", thirtyDaysAgoTimestamp)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
