@@ -10,16 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.meudiariodeemocoes.databinding.ItemMoodEntryBinding;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.MoodViewHolder> {
 
-    private List<MoodEntry> moodEntries;
-    private Context context;
-    private OnItemClickListener listener;
+    private final List<MoodEntry> moodEntries;
+    private final Context context;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemDeleteClick(MoodEntry moodEntry);
@@ -27,7 +26,7 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
 
     public MoodEntryAdapter(Context context, List<MoodEntry> moodEntries, OnItemClickListener listener) {
         this.context = context;
-        this.moodEntries = moodEntries != null ? moodEntries : new ArrayList<>();
+        this.moodEntries = moodEntries;
         this.listener = listener;
     }
 
@@ -49,16 +48,8 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
         return moodEntries.size();
     }
 
-    public void updateEntries(List<MoodEntry> newEntries) {
-        this.moodEntries.clear();
-        if (newEntries != null) {
-            this.moodEntries.addAll(newEntries);
-        }
-        notifyDataSetChanged();
-    }
-
-    class MoodViewHolder extends RecyclerView.ViewHolder {
-        private ItemMoodEntryBinding binding;
+    public class MoodViewHolder extends RecyclerView.ViewHolder {
+        private final ItemMoodEntryBinding binding;
 
         public MoodViewHolder(ItemMoodEntryBinding binding) {
             super(binding.getRoot());
@@ -101,11 +92,13 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
                 binding.textViewMoodReasonsItem.setVisibility(View.GONE);
             }
 
-            if (!TextUtils.isEmpty(entry.getDescription())) {
-                binding.textViewMoodDescriptionItem.setText(entry.getDescription());
-                binding.textViewMoodDescriptionItem.setVisibility(View.VISIBLE);
-            } else {
-                binding.textViewMoodDescriptionItem.setVisibility(View.GONE);
+            if (binding.textViewMoodDescriptionItem != null) {
+                if (!TextUtils.isEmpty(entry.getDescription())) {
+                    binding.textViewMoodDescriptionItem.setText(entry.getDescription());
+                    binding.textViewMoodDescriptionItem.setVisibility(View.VISIBLE);
+                } else {
+                    binding.textViewMoodDescriptionItem.setVisibility(View.GONE);
+                }
             }
         }
     }

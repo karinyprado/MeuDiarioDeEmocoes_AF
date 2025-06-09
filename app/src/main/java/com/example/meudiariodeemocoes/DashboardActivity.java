@@ -49,8 +49,6 @@ public class DashboardActivity extends AppCompatActivity {
         binding.progressBarDashboard.setVisibility(View.VISIBLE);
         binding.textViewNoDashboardData.setVisibility(View.GONE);
         binding.pieChartMoodDistribution.setVisibility(View.GONE);
-        binding.textViewMostFrequentMood.setVisibility(View.GONE);
-        binding.textViewMainReasonSummary.setVisibility(View.GONE);
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, -30);
@@ -72,12 +70,11 @@ public class DashboardActivity extends AppCompatActivity {
                             binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
                         } else {
                             binding.pieChartMoodDistribution.setVisibility(View.VISIBLE);
-                            binding.textViewMostFrequentMood.setVisibility(View.VISIBLE);
                             processAndDisplayDashboard(moodEntries);
                         }
                     } else {
                         String errorMessage = task.getException() != null ? task.getException().getMessage() : "Erro desconhecido";
-                        Toast.makeText(DashboardActivity.this, "Erro ao carregar dados do dashboard: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DashboardActivity.this, "Erro ao carregar dados: " + errorMessage, Toast.LENGTH_SHORT).show();
                         binding.textViewNoDashboardData.setVisibility(View.VISIBLE);
                     }
                 });
@@ -87,7 +84,11 @@ public class DashboardActivity extends AppCompatActivity {
         Map<String, Integer> moodCounts = new HashMap<>();
         for (MoodEntry entry : entries) {
             if (entry.getMoodLabel() != null) {
-                moodCounts.put(entry.getMoodLabel(), moodCounts.getOrDefault(entry.getMoodLabel(), 0) + 1);
+                Integer count = moodCounts.get(entry.getMoodLabel());
+                if (count == null) {
+                    count = 0;
+                }
+                moodCounts.put(entry.getMoodLabel(), count + 1);
             }
         }
 

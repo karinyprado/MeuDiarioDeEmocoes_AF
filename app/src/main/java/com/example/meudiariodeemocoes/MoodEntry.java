@@ -2,7 +2,7 @@ package com.example.meudiariodeemocoes;
 
 import com.google.firebase.firestore.Exclude;
 import java.util.List;
-
+@SuppressWarnings("unused")
 public class MoodEntry {
     @Exclude
     private String entryId;

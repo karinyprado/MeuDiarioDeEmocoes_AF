@@ -16,7 +16,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +40,10 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
 
         moodEntryList = new ArrayList<>();
         adapter = new MoodEntryAdapter(this, moodEntryList, this);
+
         binding.recyclerViewMoodHistory.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerViewMoodHistory.setAdapter(adapter);
-        binding.fabAddMood.setOnClickListener(v -> {
-            startActivity(new Intent(MainActivity.this, AddMoodEntryActivity.class));
-        });
+        binding.fabAddMood.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AddMoodEntryActivity.class)));
     }
 
     @Override
@@ -63,36 +61,27 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
     }
 
     private void setupFirestoreListener() {
-        Log.d(TAG, "Configurando o listener do Firestore...");
-        binding.progressBarMain.setVisibility(View.VISIBLE);
         firestoreListener = db.collection("mood_entries")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((snapshots, e) -> {
-                    binding.progressBarMain.setVisibility(View.GONE);
-
                     if (e != null) {
-                        Log.e(TAG, "Erro ao ouvir o Firestore.", e);
+                        Log.w(TAG, "Listen failed.", e);
                         return;
                     }
 
                     if (snapshots != null) {
-                        Log.d(TAG, "Snapshot recebido com " + snapshots.size() + " documentos.");
                         moodEntryList.clear();
                         for (QueryDocumentSnapshot doc : snapshots) {
                             MoodEntry entry = doc.toObject(MoodEntry.class);
                             entry.setEntryId(doc.getId());
                             moodEntryList.add(entry);
                         }
-
-                        Log.d(TAG, "Notificando o adapter que os dados mudaram. Novo tamanho: " + moodEntryList.size());
                         adapter.notifyDataSetChanged();
 
                         if (moodEntryList.isEmpty()) {
                             binding.textViewNoEntries.setVisibility(View.VISIBLE);
-                            binding.recyclerViewMoodHistory.setVisibility(View.GONE);
                         } else {
                             binding.textViewNoEntries.setVisibility(View.GONE);
-                            binding.recyclerViewMoodHistory.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -131,9 +120,7 @@ public class MainActivity extends AppCompatActivity implements MoodEntryAdapter.
         }
         db.collection("mood_entries").document(moodEntry.getEntryId())
                 .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(MainActivity.this, R.string.delete_entry_success, Toast.LENGTH_SHORT).show();
-                })
+                .addOnSuccessListener(aVoid -> Toast.makeText(MainActivity.this, R.string.delete_entry_success, Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(MainActivity.this, getString(R.string.delete_entry_error) + ": " + e.getMessage(), Toast.LENGTH_LONG).show());
     }
 }
