@@ -92,13 +92,11 @@ public class MoodEntryAdapter extends RecyclerView.Adapter<MoodEntryAdapter.Mood
                 binding.textViewMoodReasonsItem.setVisibility(View.GONE);
             }
 
-            if (binding.textViewMoodDescriptionItem != null) {
-                if (!TextUtils.isEmpty(entry.getDescription())) {
-                    binding.textViewMoodDescriptionItem.setText(entry.getDescription());
-                    binding.textViewMoodDescriptionItem.setVisibility(View.VISIBLE);
-                } else {
-                    binding.textViewMoodDescriptionItem.setVisibility(View.GONE);
-                }
+            if (!TextUtils.isEmpty(entry.getDescription())) {
+                binding.textViewMoodDescriptionItem.setText(entry.getDescription());
+                binding.textViewMoodDescriptionItem.setVisibility(View.VISIBLE);
+            } else {
+                binding.textViewMoodDescriptionItem.setVisibility(View.GONE);
             }
         }
     }
